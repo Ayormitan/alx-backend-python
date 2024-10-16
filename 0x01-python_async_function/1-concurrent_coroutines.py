@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
+from typing import List
 import asyncio
-from basic_async_syntax import wait_random
+wait_random = __import__('0-basic_async_syntax').wait_random
 
-async def wait_n(n, max_delay) -> list:
-    delays = []
-    # Create lost of tasks
+
+async def wait_n(n: int, max_delay: int) -> List[float]:
+    """Create lost of tasks"""
     tasks = [wait_random(max_delay) for _ in range(n)]
 
-    #Gtaher results
-    for delay in await asyncio.gather(*tasks):
-        delays.append(delay)
-    # Return the delays in ascending order using heapq
-    return sorted(delays)
+    """Gather results"""
+    tasks = asyncio.as_completed(tasks)
+    delays = [await task for task in tasks]
+    """Return the delays in ascending order using heap"""
+    return delays
